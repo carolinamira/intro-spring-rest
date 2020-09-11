@@ -1,0 +1,1 @@
+SELECT * FROM db_rede_social.tb_usuario;
