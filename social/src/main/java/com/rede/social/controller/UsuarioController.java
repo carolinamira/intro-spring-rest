@@ -1,55 +1,40 @@
 package com.rede.social.controller;
 
-import java.util.List;
+import java.util.Optional;
 
+import com.rede.social.model.UserLogin;
+import com.rede.social.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rede.social.model.Usuario;
-import com.rede.social.repository.UsuarioRepository;
+import com.rede.social.service.UsuarioService;
 
 @RestController
-@RequestMapping("/usuario")
+@RequestMapping("/usuarios")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UsuarioController {
 	
 	@Autowired
-	private UsuarioRepository repository;
+	private UsuarioService usuarioService;
 	
-	@GetMapping //getAllUsuario
-	public ResponseEntity<List<Usuario>> getAllUsuario() {
-		return ResponseEntity.ok(repository.findAll());
+	@PostMapping("/logar")
+	public ResponseEntity<UserLogin> Autentication (@RequestBody Optional<UserLogin> user){
+		return usuarioService.Logar(user).map(resp-> ResponseEntity.ok(resp))
+				.orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 	}
+		
+	@PostMapping("/cadastrar")
+	public ResponseEntity<Usuario> Post (@RequestBody Usuario usuario){
+		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.CadastrarUsuario(usuario));
+		}
 	
-	@GetMapping("/{id}") //getByIDUsuario
-	public ResponseEntity<Usuario> findByIDUsuario (@PathVariable long id){
-		return repository.findById(id).map(resp-> ResponseEntity.ok(resp))
-				.orElse(ResponseEntity.notFound().build());
-	}
 	
-	@PostMapping //postUsuario
-	public ResponseEntity<Usuario> postUsuario (@RequestBody Usuario nome){
-		return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(nome));
-	}
-	
-	@PutMapping //putUsuario
-	public ResponseEntity<Usuario> putUsuario (@RequestBody Usuario nome) {
-		return ResponseEntity.ok(repository.save(nome));		
-	}
-	
-	@DeleteMapping("/{id}") //deleteUsuario
-	public void deleteUsuario (@PathVariable long id) {
-		repository.deleteById(id);
-	}
+
 
 }

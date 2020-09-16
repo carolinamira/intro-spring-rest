@@ -27,11 +27,11 @@ public class Usuario {
 	private String nome;
 	
 	@NotNull
-	@Size(min = 10, max = 50)
-	private String email;
+	@Size(min = 10, max = 200)
+	private String usuario;
 	
 	@NotNull
-	@Size(min = 6, max = 16)
+	@Size(min = 6, max = 200)
 	private String senha;
 	
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
@@ -54,12 +54,12 @@ public class Usuario {
 		this.nome = nome;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getUsuario() {
+		return usuario;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setUsuario(String email) {
+		this.usuario = email;
 	}
 
 	public String getSenha() {
